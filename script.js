@@ -122,36 +122,51 @@ function generateQuestion(level) {
         }
     }
 
-    // Class 9-10: Quadratics, Trigonometry (Simple), Polynomials
-    else {
-        const type = getRandomInt(1, 3);
-        if (type === 1) { // Quadratic Equation Roots
-            // (x - r1)(x - r2) = 0 form
-            const r1 = getRandomInt(-5, 5);
-            const r2 = getRandomInt(-5, 5);
-            const b = -(r1 + r2);
-            const c = r1 * r2;
-            // x^2 + bx + c = 0
-            const signB = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
-            const signC = c >= 0 ? `+ ${c}` : `- ${Math.abs(c)}`;
-            q = `Find the sum of roots for: x² ${signB}x ${signC} = 0`;
-            ans = r1 + r2;
-        } else if (type === 2) { // Slope of Line
-            const x1 = 0, y1 = getRandomInt(-10, 10);
-            const x2 = getRandomInt(1, 10);
-            const y2 = getRandomInt(-10, 10);
-            const m = (y2 - y1) / (x2 - x1);
-            q = `Slope of line passing (${x1},${y1}) and (${x2},${y2})`;
-            // Avoid division by zero or weird decimals for this demo
-            if (Number.isInteger(m)) ans = m;
-            else { ans = "Undefined/Decimal"; q = "Simplified: 6/2(1+2)"; ans = 9; } // Fallback safety
-        } else { // Indices
-            const a = getRandomInt(2, 5);
-            q = `${a}³`;
-            ans = a * a * a;
-        }
+   // Class 9-10: Advanced Quadratics, Trigonometry, Polynomials
+else {
+    const type = getRandomInt(1, 5);
+    if (type === 1) { // Quadratic: Sum/Product of roots + discriminant
+        const r1 = getRandomInt(-8, 8);
+        const r2 = getRandomInt(-8, 8);
+        if (r1 === r2) { r2 = r1 + getRandomInt(1, 3); } // Avoid equal roots
+        const b = -(r1 + r2);
+        const c = r1 * r2;
+        const discriminant = b*b - 4*c;
+        q = `For x² ${b>=0?`+${b}`:`-${Math.abs(b)}`}x ${c>=0?`+${c}`:`-${Math.abs(c)}`} = 0, find sum of roots × discriminant`;
+        ans = (r1 + r2) * discriminant;
+        
+    } else if (type === 2) { // Trigonometry: Compound angles
+        const angles = [30, 45, 60, 90];
+        const a1 = angles[getRandomInt(0, 3)];
+        const a2 = angles[getRandomInt(0, 3)];
+        const func = getRandomInt(1, 2) === 1 ? 'sin' : 'cos';
+        q = `Find exact value of ${func}(${a1}° + ${a2}°)`;
+        const result = Math.sin((a1 + a2) * Math.PI / 180);
+        ans = Math.round(result * 1000) / 1000; // 3 decimal places
+        
+    } else if (type === 3) { // Polynomial: Factorization/Remainder
+        const x = getRandomInt(2, 5);
+        const poly = x*x*x - 6*x*x + 11*x - 6; // (x-1)(x-2)(x-3)
+        q = `If f(x) = x³ - 6x² + 11x - 6, find f(${x})`;
+        ans = poly;
+        
+    } else if (type === 4) { // Quadratic Word Problem
+        const speed1 = getRandomInt(20, 50);
+        const speed2 = getRandomInt(30, 60);
+        const time = getRandomInt(2, 5);
+        q = `Two objects moving towards each other at ${speed1} km/h and ${speed2} km/h meet after ${time} hours. Find distance between them (in km)`;
+        ans = (speed1 + speed2) * time;
+        
+    } else { // Trigonometric Identity Verification
+        const side1 = getRandomInt(5, 12);
+        const side2 = getRandomInt(5, 12);
+        const side3 = getRandomInt(5, 12);
+        const s = (side1 + side2 + side3) / 2;
+        const area = Math.sqrt(s * (s-side1) * (s-side2) * (s-side3));
+        q = `Triangle sides: ${side1}, ${side2}, ${side3}. Find area using Heron's formula (nearest integer)`;
+        ans = Math.round(area);
     }
-
+    
     return { q, ans };
 }
 
