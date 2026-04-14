@@ -1,152 +1,151 @@
-"<!DOCTYPE html>
-<html lang=\"en\">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Quiz Master - Test Your Skills!</title>
-    <link rel=\"stylesheet\" href=\"style.css\">
-    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-    <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap\" rel=\"stylesheet\">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class=\"background-animation\">
-        <div class=\"bubble\"></div>
-        <div class=\"bubble\"></div>
-        <div class=\"bubble\"></div>
-        <div class=\"bubble\"></div>
-        <div class=\"bubble\"></div>
+    <div class="background-animation">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
     </div>
 
-    <div class=\"container\">
+    <div class="container">
         <header>
             <h1>🧮 Math Quiz Master</h1>
             <p>Challenge yourself with 30 challenging math problems!</p>
         </header>
 
         <!-- User Details Screen -->
-        <div id=\"user-details-screen\" class=\"screen active\">
+        <div id="user-details-screen" class="screen active">
             <h2>📝 Enter Your Details</h2>
-            <form id=\"user-form\" class=\"user-form\" action=\"javascript:void(0);\">
-                <div class=\"form-group\">
-                    <label for=\"user-name\">👤 Name</label>
-                    <input type=\"text\" id=\"user-name\" name=\"user-name\" placeholder=\"Enter your name\" required autocomplete=\"off\">
+            <form id="user-form" class="user-form">
+                <div class="form-group">
+                    <label for="user-name">👤 Name</label>
+                    <input type="text" id="user-name" placeholder="Enter your name" required>
                 </div>
                 
-                <div class=\"form-group\">
-                    <label for=\"user-gender\">⚧ Gender</label>
-                    <select id=\"user-gender\" name=\"user-gender\" required>
-                        <option value=\"\">Select Gender</option>
-                        <option value=\"Male\">Male</option>
-                        <option value=\"Female\">Female</option>
-                        <option value=\"Other\">Other</option>
+                <div class="form-group">
+                    <label for="user-gender">⚧ Gender</label>
+                    <select id="user-gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 
-                <div class=\"form-group\">
-                    <label for=\"user-class\">📚 Class</label>
-                    <select id=\"user-class\" name=\"user-class\" required>
-                        <option value=\"\">Select Class</option>
-                        <option value=\"1\">Class 1</option>
-                        <option value=\"2\">Class 2</option>
-                        <option value=\"3\">Class 3</option>
-                        <option value=\"4\">Class 4</option>
-                        <option value=\"5\">Class 5</option>
-                        <option value=\"6\">Class 6</option>
-                        <option value=\"7\">Class 7</option>
-                        <option value=\"8\">Class 8</option>
-                        <option value=\"9\">Class 9</option>
-                        <option value=\"10\">Class 10</option>
-                        <option value=\"11\">Class 11</option>
-                        <option value=\"12\">Class 12</option>
+                <div class="form-group">
+                    <label for="user-class">📚 Class</label>
+                    <select id="user-class" required>
+                        <option value="">Select Class</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
                     </select>
                 </div>
                 
-                <button type=\"button\" class=\"action-btn\" id=\"start-quiz-btn\">Start Quiz 🚀</button>
+                <button type="submit" class="action-btn">Start Quiz 🚀</button>
             </form>
         </div>
 
         <!-- Level Selection Screen -->
-        <div id=\"start-screen\" class=\"screen\">
-            <div class=\"user-info\">
-                <p>👋 Welcome, <strong id=\"display-name\">Student</strong>!</p>
-                <p>Class: <strong id=\"display-class\">-</strong> | Gender: <strong id=\"display-gender\">-</strong></p>
+        <div id="start-screen" class="screen">
+            <div class="user-info">
+                <p>👋 Welcome, <strong id="display-name">Student</strong>!</p>
+                <p>Class: <strong id="display-class">-</strong> | Gender: <strong id="display-gender">-</strong></p>
             </div>
             <h2>Select Your Difficulty Level</h2>
-            <div class=\"level-grid\">
-                <button class=\"level-btn\" onclick=\"startQuiz(1)\">📚 Class 1-2<br><span>Basic Arithmetic</span></button>
-                <button class=\"level-btn\" onclick=\"startQuiz(3)\">📖 Class 3-4<br><span>Multiplication & Division</span></button>
-                <button class=\"level-btn\" onclick=\"startQuiz(5)\">📗 Class 5-6<br><span>Algebra & Geometry</span></button>
-                <button class=\"level-btn\" onclick=\"startQuiz(7)\">📘 Class 7-8<br><span>Advanced Algebra</span></button>
-                <button class=\"level-btn\" onclick=\"startQuiz(9)\">📙 Class 9-10<br><span>Quadratics & Trigonometry</span></button>
+            <div class="level-grid">
+                <button class="level-btn" onclick="startQuiz(1)">📚 Class 1-2<br><span>Basic Arithmetic</span></button>
+                <button class="level-btn" onclick="startQuiz(3)">📖 Class 3-4<br><span>Multiplication & Division</span></button>
+                <button class="level-btn" onclick="startQuiz(5)">📗 Class 5-6<br><span>Algebra & Geometry</span></button>
+                <button class="level-btn" onclick="startQuiz(7)">📘 Class 7-8<br><span>Advanced Algebra</span></button>
+                <button class="level-btn" onclick="startQuiz(9)">📙 Class 9-10<br><span>Quadratics & Trigonometry</span></button>
             </div>
         </div>
 
         <!-- Quiz Screen -->
-        <div id=\"quiz-screen\" class=\"screen\">
-            <div class=\"quiz-header\">
-                <div id=\"level-display\">Level: Class 1</div>
-                <div id=\"score-display\">Score: 0</div>
-                <div id=\"timer\" class=\"timer\">Time: 01:00</div>
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div id="level-display">Level: Class 1</div>
+                <div id="score-display">Score: 0</div>
+                <div id="timer" class="timer">Time: 01:00</div>
             </div>
 
-            <div class=\"progress-container\">
-                <div class=\"progress-bar\" id=\"progress-bar\"></div>
-                <span class=\"progress-text\" id=\"progress-text\">Question 1/30</span>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+                <span class="progress-text" id="progress-text">Question 1/30</span>
             </div>
 
-            <div class=\"question-box\" id=\"question-text\">
+            <div class="question-box" id="question-text">
                 Loading question...
             </div>
 
-            <div class=\"options-grid\" id=\"options-container\">
+            <div class="options-grid" id="options-container">
                 <!-- Options will be dynamically inserted here -->
             </div>
 
-            <button id=\"next-btn\" class=\"action-btn\" onclick=\"nextQuestion()\" style=\"display:none;\">Next Question →</button>
+            <button id="next-btn" class="action-btn" onclick="nextQuestion()" style="display:none;">Next Question →</button>
         </div>
 
         <!-- Result Screen -->
-        <div id=\"result-screen\" class=\"screen\">
-            <div class=\"result-container\">
-                <div class=\"trophy-icon\">🏆</div>
+        <div id="result-screen" class="screen">
+            <div class="result-container">
+                <div class="trophy-icon">🏆</div>
                 <h2>Quiz Completed!</h2>
                 
-                <div class=\"user-result-info\">
-                    <p><strong id=\"result-name\"></strong></p>
-                    <p>Class: <strong id=\"result-class\"></strong> | Gender: <strong id=\"result-gender\"></strong></p>
+                <div class="user-result-info">
+                    <p><strong id="result-name"></strong></p>
+                    <p>Class: <strong id="result-class"></strong> | Gender: <strong id="result-gender"></strong></p>
                 </div>
 
-                <div class=\"final-score-display\">
+                <div class="final-score-display">
                     <p>Your Score</p>
-                    <h1 id=\"final-score\">0/30</h1>
-                    <p class=\"percentage\" id=\"percentage\">0%</p>
+                    <h1 id="final-score">0/30</h1>
+                    <p class="percentage" id="percentage">0%</p>
                 </div>
                 
-                <div class=\"score-comparison\">
-                    <div class=\"score-card\">
+                <div class="score-comparison">
+                    <div class="score-card">
                         <h3>🥇 Top Score</h3>
-                        <p class=\"big-score\" id=\"top-score\">0/30</p>
-                        <p class=\"score-holder\" id=\"top-scorer\">No records yet</p>
+                        <p class="big-score" id="top-score">0/30</p>
+                        <p class="score-holder" id="top-scorer">No records yet</p>
                     </div>
-                    <div class=\"score-card\">
+                    <div class="score-card">
                         <h3>📊 Comparison</h3>
-                        <p class=\"comparison-text\" id=\"comparison-text\">-</p>
+                        <p class="comparison-text" id="comparison-text">-</p>
                     </div>
                 </div>
                 
-                <p id=\"feedback-text\" class=\"feedback\">Well done!</p>
-                <button class=\"action-btn\" onclick=\"location.reload()\">🔄 Try Another Level</button>
+                <p id="feedback-text" class="feedback">Well done!</p>
+                <button class="action-btn" onclick="location.reload()">🔄 Try Another Level</button>
             </div>
         </div>
 
         <!-- Footer Credit -->
-        <footer class=\"credit\">
+        <footer class="credit">
             <p>✨ CREATED WITH LOVE OF MATHZZ: SOURAV BHOWMIK ✨</p>
         </footer>
     </div>
 
-    <script src=\"script.js\"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-"
