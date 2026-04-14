@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Master - Test Your Skills!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🧮 Math Quiz Master</h1>
+            <p>Challenge yourself with math problems from Class 1 to 10!</p>
+        </header>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h2>Select Your Level</h2>
+            <div class="level-grid">
+                <button class="level-btn" onclick="startQuiz(1)">📚 Class 1-2<br><span>Basic Addition & Subtraction</span></button>
+                <button class="level-btn" onclick="startQuiz(3)">📖 Class 3-4<br><span>Multiplication & Division</span></button>
+                <button class="level-btn" onclick="startQuiz(5)">📗 Class 5-6<br><span>Algebra & Averages</span></button>
+                <button class="level-btn" onclick="startQuiz(7)">📘 Class 7-8<br><span>Integers & Percentages</span></button>
+                <button class="level-btn" onclick="startQuiz(9)">📙 Class 9-10<br><span>Quadratics & Polynomials</span></button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div id="level-display">Level: Class 1</div>
+                <div id="score-display">Score: 0</div>
+                <div id="timer" class="timer">Time: 00:30</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="question-box" id="question-text">
+                Loading question...
+            </div>
+
+            <div class="options-grid" id="options-container">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+
+            <button id="next-btn" class="action-btn" onclick="nextQuestion()" style="display:none;">Next Question →</button>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <div class="result-container">
+                <div class="trophy-icon">🏆</div>
+                <h2>Quiz Completed!</h2>
+                <div class="final-score-display">
+                    <p>Your Score</p>
+                    <h1 id="final-score">0/10</h1>
+                </div>
+                <p id="feedback-text" class="feedback">Well done!</p>
+                <button class="action-btn" onclick="location.reload()">🔄 Try Another Level</button>
+            </div>
+        </div>
+
+        <!-- Footer Credit -->
+        <footer class="credit">
+            <p>✨ CREATED WITH LOVE OF MATHZZ: SOURAV BHOWMIK ✨</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
