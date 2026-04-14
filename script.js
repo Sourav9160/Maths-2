@@ -4,7 +4,7 @@ let score = 0;
 let questionCount = 0;
 let correctAnswer = 0;
 let timerInterval;
-const totalQuestions = 10; // Quiz ends after 10 questions
+const totalQuestions = 30; // Quiz ends after 30 questions
 
 // DOM Elements
 const startScreen = document.getElementById('start-screen');
