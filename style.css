@@ -97,7 +97,7 @@ body {
     border-radius: 25px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     width: 100%;
-    max-width: 600px;
+    max-width: 650px;
     text-align: center;
     position: relative;
     z-index: 1;
@@ -150,6 +150,61 @@ header p {
         opacity: 1; 
         transform: translateY(0); 
     }
+}
+
+/* User Details Form */
+.user-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.user-form button {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* User Info Display */
+.user-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.user-info p {
+    margin: 5px 0;
+    color: #333;
 }
 
 /* Level Selection */
@@ -217,7 +272,7 @@ header p {
 .quiz-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-weight: 600;
     color: #555;
     border-bottom: 2px solid #f0f0f0;
@@ -250,8 +305,9 @@ header p {
     height: 8px;
     background: #f0f0f0;
     border-radius: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     overflow: hidden;
+    position: relative;
 }
 
 .progress-bar {
@@ -262,13 +318,21 @@ header p {
     border-radius: 10px;
 }
 
+.progress-text {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
 /* Question Box */
 .question-box {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 30px;
     border-radius: 15px;
     margin-bottom: 25px;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 600;
     min-height: 100px;
     display: flex;
@@ -276,6 +340,7 @@ header p {
     justify-content: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     color: #333;
+    word-wrap: break-word;
 }
 
 /* Options */
@@ -381,7 +446,19 @@ header p {
 .result-container h2 {
     color: #764ba2;
     font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.user-result-info {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 12px;
+    border-radius: 10px;
     margin-bottom: 20px;
+}
+
+.user-result-info p {
+    margin: 3px 0;
+    color: #333;
 }
 
 .final-score-display {
@@ -402,6 +479,53 @@ header p {
     font-size: 3.5rem;
     font-weight: 700;
     margin: 0;
+}
+
+.percentage {
+    font-size: 1.5rem !important;
+    font-weight: 600;
+    margin-top: 10px !important;
+}
+
+/* Score Comparison */
+.score-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.score-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.score-card h3 {
+    color: #764ba2;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.big-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    margin: 10px 0;
+}
+
+.score-holder {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.comparison-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
 }
 
 .feedback {
@@ -453,7 +577,7 @@ header p {
     }
 
     .question-box {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         padding: 20px;
     }
 
@@ -462,11 +586,15 @@ header p {
     }
 
     .quiz-header {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     .final-score-display h1 {
         font-size: 2.5rem;
+    }
+
+    .score-comparison {
+        grid-template-columns: 1fr;
     }
 }
 

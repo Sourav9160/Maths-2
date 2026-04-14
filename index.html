@@ -21,18 +21,64 @@
     <div class="container">
         <header>
             <h1>🧮 Math Quiz Master</h1>
-            <p>Challenge yourself with math problems from Class 1 to 10!</p>
+            <p>Challenge yourself with 30 challenging math problems!</p>
         </header>
 
-        <!-- Start Screen -->
-        <div id="start-screen" class="screen active">
-            <h2>Select Your Level</h2>
+        <!-- User Details Screen -->
+        <div id="user-details-screen" class="screen active">
+            <h2>📝 Enter Your Details</h2>
+            <form id="user-form" class="user-form">
+                <div class="form-group">
+                    <label for="user-name">👤 Name</label>
+                    <input type="text" id="user-name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-gender">⚧ Gender</label>
+                    <select id="user-gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-class">📚 Class</label>
+                    <select id="user-class" required>
+                        <option value="">Select Class</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="action-btn">Start Quiz 🚀</button>
+            </form>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div id="start-screen" class="screen">
+            <div class="user-info">
+                <p>👋 Welcome, <strong id="display-name">Student</strong>!</p>
+                <p>Class: <strong id="display-class">-</strong> | Gender: <strong id="display-gender">-</strong></p>
+            </div>
+            <h2>Select Your Difficulty Level</h2>
             <div class="level-grid">
-                <button class="level-btn" onclick="startQuiz(1)">📚 Class 1-2<br><span>Basic Addition & Subtraction</span></button>
+                <button class="level-btn" onclick="startQuiz(1)">📚 Class 1-2<br><span>Basic Arithmetic</span></button>
                 <button class="level-btn" onclick="startQuiz(3)">📖 Class 3-4<br><span>Multiplication & Division</span></button>
-                <button class="level-btn" onclick="startQuiz(5)">📗 Class 5-6<br><span>Algebra & Averages</span></button>
-                <button class="level-btn" onclick="startQuiz(7)">📘 Class 7-8<br><span>Integers & Percentages</span></button>
-                <button class="level-btn" onclick="startQuiz(9)">📙 Class 9-10<br><span>Quadratics & Polynomials</span></button>
+                <button class="level-btn" onclick="startQuiz(5)">📗 Class 5-6<br><span>Algebra & Geometry</span></button>
+                <button class="level-btn" onclick="startQuiz(7)">📘 Class 7-8<br><span>Advanced Algebra</span></button>
+                <button class="level-btn" onclick="startQuiz(9)">📙 Class 9-10<br><span>Quadratics & Trigonometry</span></button>
             </div>
         </div>
 
@@ -41,11 +87,12 @@
             <div class="quiz-header">
                 <div id="level-display">Level: Class 1</div>
                 <div id="score-display">Score: 0</div>
-                <div id="timer" class="timer">Time: 00:30</div>
+                <div id="timer" class="timer">Time: 01:00</div>
             </div>
 
             <div class="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
+                <span class="progress-text" id="progress-text">Question 1/30</span>
             </div>
 
             <div class="question-box" id="question-text">
@@ -64,10 +111,30 @@
             <div class="result-container">
                 <div class="trophy-icon">🏆</div>
                 <h2>Quiz Completed!</h2>
+                
+                <div class="user-result-info">
+                    <p><strong id="result-name"></strong></p>
+                    <p>Class: <strong id="result-class"></strong> | Gender: <strong id="result-gender"></strong></p>
+                </div>
+
                 <div class="final-score-display">
                     <p>Your Score</p>
-                    <h1 id="final-score">0/10</h1>
+                    <h1 id="final-score">0/30</h1>
+                    <p class="percentage" id="percentage">0%</p>
                 </div>
+                
+                <div class="score-comparison">
+                    <div class="score-card">
+                        <h3>🥇 Top Score</h3>
+                        <p class="big-score" id="top-score">0/30</p>
+                        <p class="score-holder" id="top-scorer">No records yet</p>
+                    </div>
+                    <div class="score-card">
+                        <h3>📊 Comparison</h3>
+                        <p class="comparison-text" id="comparison-text">-</p>
+                    </div>
+                </div>
+                
                 <p id="feedback-text" class="feedback">Well done!</p>
                 <button class="action-btn" onclick="location.reload()">🔄 Try Another Level</button>
             </div>
