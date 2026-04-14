@@ -4,7 +4,8 @@ let score = 0;
 let questionCount = 0;
 let correctAnswer = 0;
 let timerInterval;
-const totalQuestions = 30; // Quiz ends after 30 questions
+let usedQuestions = new Set(); // Track used questions to prevent repeats
+const totalQuestions = 30; // Fixed 30 questions
 
 // DOM Elements
 const startScreen = document.getElementById('start-screen');
@@ -18,170 +19,196 @@ const scoreDisplay = document.getElementById('score-display');
 const levelDisplay = document.getElementById('level-display');
 const progressBar = document.getElementById('progress-bar');
 
-// Utility: Random Integer
+// Utility Functions
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Utility: Random Number including negatives
 function getRandomIntWithNeg(min, max) {
-    let num = Math.floor(Math.random() * (max - min + 1)) + min;
-    if(Math.random() < 0.5 && num !== 0) num = -num;
+    let num = getRandomInt(min, max);
+    if (Math.random() < 0.5 && num !== 0) num = -num;
     return num;
 }
 
-// --- Question Generators based on Level ---
-
-function generateQuestion(level) {
-    let q = "";
-    let ans = 0;
-    let type = "";
-
-    // Class 1-2: Basic Arithmetic
-    if (level <= 2) {
-        const a = getRandomInt(1, 20);
-        const b = getRandomInt(1, 20);
-        const op = Math.random() > 0.5 ? '+' : '-';
-
-        if (op === '+') {
-            q = `${a} + ${b}`;
-            ans = a + b;
-        } else {
-            // Ensure no negative answers for early levels
-            const max = Math.max(a, b);
-            const min = Math.min(a, b);
-            q = `${max} - ${min}`;
-            ans = max - min;
-        }
-    }
-
-    // Class 3-4: Multiplication, Division, Basic Word Logic
-    else if (level <= 4) {
-        const type = getRandomInt(1, 3);
-        if (type === 1) { // Multiplication
-            const a = getRandomInt(2, 12);
-            const b = getRandomInt(2, 12);
-            q = `${a} × ${b}`;
-            ans = a * b;
-        } else if (type === 2) { // Simple Division
-            const b = getRandomInt(2, 10);
-            ans = getRandomInt(2, 10);
-            const a = b * ans;
-            q = `${a} ÷ ${b}`;
-        } else { // Word problem style logic (e.g., squares)
-            const a = getRandomInt(2, 10);
-            q = `${a}² (Square of ${a})`;
-            ans = a * a;
-        }
-    }
-
-    // Class 5-6: Algebra, LCM, HCF, Decimals
-    else if (level <= 6) {
-        const type = getRandomInt(1, 3);
-        if (type === 1) { // Simple Algebra
-            const x = getRandomInt(1, 10);
-            const a = getRandomInt(2, 9);
-            const b = getRandomInt(1, 20);
-            // ax + b = ?
-            q = `If x = ${x}, what is ${a}x + ${b}?`;
-            ans = (a * x) + b;
-        } else if (type === 2) { // Simple Equation Solution
-            const a = getRandomInt(2, 5);
-            const b = getRandomInt(5, 20);
-            const x = getRandomInt(1, 10);
-            // ax - b = c -> x = ?
-            const c = (a * x) - b;
-            q = `Solve: ${a}x - ${b} = ${c}`;
-            ans = x;
-        } else { // Average/Mean
-            const nums = [getRandomInt(1,10), getRandomInt(1,10), getRandomInt(1,10)];
-            const sum = nums.reduce((a, b) => a + b, 0);
-            ans = Math.floor(sum / 3);
-            q = `Average of ${nums[0]}, ${nums[1]}, ${nums[2]}`;
-        }
-    }
-
-    // Class 7-8: Integers, Simple Factors, Geometry Area
-    else if (level <= 8) {
-        const type = getRandomInt(1, 3);
-        if (type === 1) { // Integer Arithmetic
-            const a = getRandomIntWithNeg(-15, 15);
-            const b = getRandomIntWithNeg(-15, 15);
-            q = `${a} + (${b})`;
-            ans = a + b;
-        } else if (type === 2) { // Percentage
-            const x = getRandomInt(1, 20) * 10; // 10, 20... 200
-            const p = getRandomInt(1, 9) * 10; // 10, 20... 90
-            q = `${p}% of ${x}`;
-            ans = (p * x) / 100;
-        } else { // Area of Rectangle
-            const l = getRandomInt(5, 15);
-            const w = getRandomInt(5, 15);
-            q = `Area of rectangle with length ${l} and width ${w}`;
-            ans = l * w;
-        }
-    }
-
-   // Class 9-10: Advanced Quadratics, Trigonometry, Polynomials
-else {
-    const type = getRandomInt(1, 5);
-    if (type === 1) { // Quadratic: Sum/Product of roots + discriminant
-        const r1 = getRandomInt(-8, 8);
-        const r2 = getRandomInt(-8, 8);
-        if (r1 === r2) { r2 = r1 + getRandomInt(1, 3); } // Avoid equal roots
-        const b = -(r1 + r2);
-        const c = r1 * r2;
-        const discriminant = b*b - 4*c;
-        q = `For x² ${b>=0?`+${b}`:`-${Math.abs(b)}`}x ${c>=0?`+${c}`:`-${Math.abs(c)}`} = 0, find sum of roots × discriminant`;
-        ans = (r1 + r2) * discriminant;
-        
-    } else if (type === 2) { // Trigonometry: Compound angles
-        const angles = [30, 45, 60, 90];
-        const a1 = angles[getRandomInt(0, 3)];
-        const a2 = angles[getRandomInt(0, 3)];
-        const func = getRandomInt(1, 2) === 1 ? 'sin' : 'cos';
-        q = `Find exact value of ${func}(${a1}° + ${a2}°)`;
-        const result = Math.sin((a1 + a2) * Math.PI / 180);
-        ans = Math.round(result * 1000) / 1000; // 3 decimal places
-        
-    } else if (type === 3) { // Polynomial: Factorization/Remainder
-        const x = getRandomInt(2, 5);
-        const poly = x*x*x - 6*x*x + 11*x - 6; // (x-1)(x-2)(x-3)
-        q = `If f(x) = x³ - 6x² + 11x - 6, find f(${x})`;
-        ans = poly;
-        
-    } else if (type === 4) { // Quadratic Word Problem
-        const speed1 = getRandomInt(20, 50);
-        const speed2 = getRandomInt(30, 60);
-        const time = getRandomInt(2, 5);
-        q = `Two objects moving towards each other at ${speed1} km/h and ${speed2} km/h meet after ${time} hours. Find distance between them (in km)`;
-        ans = (speed1 + speed2) * time;
-        
-    } else { // Trigonometric Identity Verification
-        const side1 = getRandomInt(5, 12);
-        const side2 = getRandomInt(5, 12);
-        const side3 = getRandomInt(5, 12);
-        const s = (side1 + side2 + side3) / 2;
-        const area = Math.sqrt(s * (s-side1) * (s-side2) * (s-side3));
-        q = `Triangle sides: ${side1}, ${side2}, ${side3}. Find area using Heron's formula (nearest integer)`;
-        ans = Math.round(area);
-    }
-    
-    return { q, ans };
+function generateQuestionHash(q, level) {
+    return `${level}_${q.replace(/[^a-zA-Z0-9]/g, '_')}`.substring(0, 50);
 }
 
-// --- Game Logic ---
+// --- TOUGHER Question Generators ---
 
+function generateQuestion(level) {
+    let q = "", ans = 0;
+    
+    // Ensure no repeats by generating until unique
+    let attempts = 0;
+    while (attempts < 10) {
+        attempts++;
+        
+        // Class 1-2: Basic but with word problems (TOUGHER)
+        if (level <= 2) {
+            const type = getRandomInt(1, 3);
+            if (type === 1) { // Money problem
+                const a = getRandomInt(1, 50);
+                const b = getRandomInt(1, 30);
+                q = `Raju has ₹${a}. He buys toy for ₹${b}. How much money left?`;
+                ans = a - b;
+            } else if (type === 2) { // Age problem
+                const age = getRandomInt(5, 15);
+                q = `If Ravi is ${age} years old, how many months old is he?`;
+                ans = age * 12;
+            } else {
+                const apples = getRandomInt(2, 8);
+                const friends = getRandomInt(2, 4);
+                q = `${apples} apples shared equally among ${friends} friends. Each gets?`;
+                ans = Math.floor(apples / friends);
+            }
+        }
+        
+        // Class 3-4: Multi-step operations (TOUGHER)
+        else if (level <= 4) {
+            const type = getRandomInt(1, 4);
+            if (type === 1) { // Multi-step
+                const a = getRandomInt(5, 15);
+                const b = getRandomInt(2, 8);
+                q = `( ${a} × ${b} ) + ${b}`;
+                ans = (a * b) + b;
+            } else if (type === 2) { // Division with remainder
+                const dividend = getRandomInt(20, 50);
+                const divisor = getRandomInt(3, 8);
+                q = `Quotient when ${dividend} ÷ ${divisor}`;
+                ans = Math.floor(dividend / divisor);
+            } else if (type === 3) { // Cubes
+                const a = getRandomInt(2, 6);
+                q = `${a}³ = ?`;
+                ans = a * a * a;
+            } else {
+                const a = getRandomInt(10, 25);
+                const b = getRandomInt(2, 5);
+                q = `Successor of ${a} × ${b}`;
+                ans = (a * b) + 1;
+            }
+        }
+        
+        // Class 5-6: Complex algebra + fractions (TOUGHER)
+        else if (level <= 6) {
+            const type = getRandomInt(1, 4);
+            if (type === 1) { // Two-step equation
+                const x = getRandomInt(2, 8);
+                const a = getRandomInt(2, 5);
+                q = `Solve: 3x + ${a} = ${3*x + a}`;
+                ans = x;
+            } else if (type === 2) { // Fraction simplification
+                const num = getRandomInt(4, 12);
+                const den = getRandomInt(6, 15);
+                const gcd = [1,2,3,4,5,6].find(d => num%d===0 && den%d===0) || 1;
+                q = `Simplify ${num}/${den}`;
+                ans = `${num/gcd}/${den/gcd}`;
+            } else if (type === 3) { // Speed-distance
+                const speed = getRandomInt(20, 40);
+                const time = getRandomInt(2, 5);
+                q = `Car at ${speed} km/h for ${time} hrs. Distance?`;
+                ans = speed * time;
+            } else {
+                const nums = Array(4).fill().map(() => getRandomInt(1,15));
+                const avg = Math.floor(nums.reduce((a,b)=>a+b)/4);
+                q = `Average of ${nums.join(', ')}`;
+                ans = avg;
+            }
+        }
+        
+        // Class 7-8: Advanced percentages, profit/loss, geometry (TOUGHER)
+        else if (level <= 8) {
+            const type = getRandomInt(1, 4);
+            if (type === 1) { // Profit/Loss
+                const cp = getRandomInt(200, 500);
+                const sp = cp + getRandomInt(50, 150);
+                const profit = sp - cp;
+                q = `CP=₹${cp}, SP=₹${sp}. Profit %?`;
+                ans = Math.round((profit/cp)*100);
+            } else if (type === 2) { // Compound interest (simple)
+                const p = 1000;
+                const r = getRandomInt(5, 10);
+                const t = 2;
+                q = `₹${p} at ${r}% p.a. for 2 yrs. Simple Interest?`;
+                ans = Math.round((p*r*t)/100);
+            } else if (type === 3) { // Circle area
+                const r = getRandomInt(5, 12);
+                q = `Area of circle radius ${r} units (use π=22/7, nearest integer)`;
+                ans = Math.round((22/7)*r*r);
+            } else {
+                const a = getRandomIntWithNeg(-20, 20);
+                const b = getRandomIntWithNeg(-20, 20);
+                q = `Simplify: ${a}² - ${b}²`;
+                ans = (a*a) - (b*b);
+            }
+        }
+        
+        // Class 9-10: COMPETITIVE LEVEL (TOUGHER)
+        else {
+            const type = getRandomInt(1, 6);
+            if (type === 1) { // Quadratic discriminant analysis
+                const a = getRandomInt(1, 4);
+                const b = getRandomIntWithNeg(-10, 10);
+                const c = getRandomInt(-12, 12);
+                const D = b*b - 4*a*c;
+                q = `For ${a}x² ${b>=0?`+${b}`:`${b}`}x ${c>=0?`+${c}`:`${c}`} = 0, Nature of roots? (D=?)`;
+                ans = D > 0 ? 2 : D === 0 ? 1 : 0;
+            } else if (type === 2) { // Trigonometry identities
+                const angle = [30, 45, 60][getRandomInt(0,2)];
+                q = `sin ${angle}° × cos ${angle}° = ? (exact fraction)`;
+                if(angle === 30) ans = "1/4";
+                else if(angle === 45) ans = "1/2";
+                else ans = "√3/4";
+            } else if (type === 3) { // Polynomial remainder theorem
+                const x = getRandomInt(1, 4);
+                q = `Divide x³ + x² - 5x - 3 by (x-${x}). Remainder?`;
+                ans = x*x*x + x*x - 5*x - 3;
+            } else if (type === 4) { // Work-time problems
+                const rate1 = getRandomInt(3, 8);
+                const rate2 = getRandomInt(2, 5);
+                const days = getRandomInt(5, 12);
+                q = `A+B finish work in ${days} days. A alone: ${rate1} units/day. Total work?`;
+                ans = (rate1 + rate2) * days;
+            } else if (type === 5) { // AP series
+                const a = getRandomInt(2, 10);
+                const d = getRandomInt(1, 4);
+                const n = 5;
+                q = `AP: first ${a}, common diff ${d}. 5th term?`;
+                ans = a + (n-1)*d;
+            } else { // Heron's formula (triangle inequality ensured)
+                let sides = [7,8,9,10,11,12].sort((a,b)=>a-b);
+                const s = (sides[0]+sides[1]+sides[2])/2;
+                const area = Math.sqrt(s*(s-sides[0])*(s-sides[1])*(s-sides[2]));
+                q = `Sides ${sides.join(',')}. Area by Heron (nearest int)?`;
+                ans = Math.round(area);
+            }
+        }
+        
+        // Check if question is unique
+        const qHash = generateQuestionHash(q, level);
+        if (!usedQuestions.has(qHash) && attempts < 8) {
+            usedQuestions.add(qHash);
+            return { q, ans, hash: qHash };
+        }
+    }
+    
+    // Fallback if too many repeats
+    usedQuestions.clear();
+    const fallback = generateQuestion(level);
+    return fallback;
+}
+
+// --- Game Logic (ENHANCED) ---
 function startQuiz(level) {
     currentLevel = level;
     score = 0;
     questionCount = 0;
+    usedQuestions.clear(); // Reset for new quiz
 
-    // Update UI
     startScreen.classList.remove('active');
     quizScreen.classList.add('active');
     scoreDisplay.innerText = `Score: 0`;
-    levelDisplay.innerText = `Level: Class ${level}`;
+    levelDisplay.innerText = `Level: Class ${level} (Expert)`;
 
     startTimer();
     loadQuestion();
@@ -195,38 +222,34 @@ function loadQuestion() {
 
     questionCount++;
     nextBtn.style.display = 'none';
-    optionsContainer.innerHTML = ''; // Clear old buttons
+    optionsContainer.innerHTML = '';
 
-    // Update progress bar
     const progress = (questionCount / totalQuestions) * 100;
     progressBar.style.width = `${progress}%`;
 
-    // Generate new question
     const problem = generateQuestion(currentLevel);
-    questionText.innerText = problem.q;
+    questionText.innerText = `${questionCount}. ${problem.q}`;
     correctAnswer = problem.ans;
 
-    // Generate Options (1 correct, 3 wrong)
+    // Smart options generation (TOUGHER distractors)
     let answers = new Set();
     answers.add(correctAnswer);
 
-    while (answers.size < 4) {
-        // Generate wrong answer close to real answer
-        let wrong = correctAnswer + getRandomInt(-5, 5);
-        if (wrong === correctAnswer) wrong += getRandomInt(1, 10);
-        // If answer is "Undefined", don't try to calculate math on it
-        if (typeof correctAnswer === 'number') {
-            answers.add(wrong);
-        } else {
-            answers.add(wrong); // Just add random numbers if logic fails
+    // Generate 3 tough distractors
+    for(let i = 0; i < 3; i++) {
+        let distractor;
+        if (typeof correctAnswer === 'string') {
+            distractor = correctAnswer.replace(/\d/g, d => (parseInt(d)+1).toString());
+        } else if (typeof correctAnswer === 'number') {
+            const error = getRandomInt(1, 3);
+            distractor = correctAnswer + (Math.random() > 0.5 ? error : -error);
+            if (distractor === correctAnswer) distractor += error;
         }
+        answers.add(distractor);
     }
 
-    // Convert Set to Array and shuffle
     const answersArray = Array.from(answers).sort(() => Math.random() - 0.5);
-
-    // Create Buttons
-    answersArray.forEach(ans => {
+    answersArray.forEach((ans, idx) => {
         const btn = document.createElement('button');
         btn.innerText = ans;
         btn.classList.add('option-btn');
@@ -236,7 +259,6 @@ function loadQuestion() {
 }
 
 function checkAnswer(btn, selectedValue) {
-    // Disable all buttons to prevent double clicking
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns.forEach(b => b.disabled = true);
 
@@ -246,9 +268,8 @@ function checkAnswer(btn, selectedValue) {
         scoreDisplay.innerText = `Score: ${score}`;
     } else {
         btn.classList.add('wrong');
-        // Highlight the correct one
         allBtns.forEach(b => {
-            if (parseFloat(b.innerText) == correctAnswer) {
+            if (b.innerText == correctAnswer) {
                 b.classList.add('correct');
             }
         });
@@ -259,7 +280,6 @@ function checkAnswer(btn, selectedValue) {
 
 function nextQuestion() {
     resetTimer();
-    startTimer();
     loadQuestion();
 }
 
@@ -268,34 +288,37 @@ function endQuiz() {
     quizScreen.classList.remove('active');
     resultScreen.classList.add('active');
     document.getElementById('final-score').innerText = `${score}/${totalQuestions}`;
-
+    
+    const percentage = Math.round((score/totalQuestions)*100);
     const feedback = document.getElementById('feedback-text');
-    if(score === 10) feedback.innerText = "Perfect Score! You're a Math Genius! 🌟";
-    else if(score > 7) feedback.innerText = "Great Job! Keep it up! 👍";
-    else if(score > 4) feedback.innerText = "Good effort, but you can do better! 💪";
-    else feedback.innerText = "Keep practicing! Practice makes perfect. 📚";
+    
+    if (percentage >= 90) feedback.innerText = "🏆 CHAMPION! Ready for Olympiads! 🌟";
+    else if (percentage >= 75) feedback.innerText = "Excellent! 🔥 Top percentile!";
+    else if (percentage >= 60) feedback.innerText = "Very Good! Keep pushing! 💪";
+    else if (percentage >= 40) feedback.innerText = "Good effort! Practice more! 📚";
+    else feedback.innerText = "Challenge accepted! Try again! 🚀";
 }
 
-// --- Timer Logic ---
-let timeLeft = 30;
+// --- Timer (25s for tougher questions) ---
+let timeLeft = 25;
 
 function startTimer() {
-    timeLeft = 30; // 30 seconds per question
+    timeLeft = 25;
     timerDisplay.innerText = `Time: 00:${timeLeft}`;
 
     timerInterval = setInterval(() => {
         timeLeft--;
-        timerDisplay.innerText = `Time: 00:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`;
+        const displayTime = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+        timerDisplay.innerText = `Time: 00:${displayTime}`;
+
+        if (timeLeft <= 5) timerDisplay.style.color = '#ff4444';
 
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            // Time's up - auto move to next question
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => {
                 b.disabled = true;
-                if (parseFloat(b.innerText) == correctAnswer) {
-                    b.classList.add('correct');
-                }
+                if (b.innerText == correctAnswer) b.classList.add('correct');
             });
             nextBtn.style.display = 'inline-block';
         }
@@ -304,5 +327,6 @@ function startTimer() {
 
 function resetTimer() {
     clearInterval(timerInterval);
-    timeLeft = 30;
+    timerDisplay.style.color = '#333';
+    timeLeft = 25;
 }
