@@ -1,3 +1,4 @@
+alert("WELCOME TO THE SITE OF MATHS")
 // State Variables
 let currentLevel = 1;
 let score = 0;
